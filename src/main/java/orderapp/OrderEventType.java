@@ -1,7 +1,7 @@
 package orderapp;
 
-public enum OrderEventType {;
-
+public enum OrderEventType {
+	PREVIEW, CREATE, CANCLE, PAY,SHOP_APPROVE, PLATFORM_APPROVE, SHOP_REJECT, PLATFORM_REJECT;
 	public static enum Order {
 		PREVIEW, CREATE, CANCLE, PAY;
 	}

@@ -1,39 +1,35 @@
 package orderapp;
 
-public class OrderEvent extends AbstractEvent<OrderEventType> {
+import state.ApplicationId;
 
-    private String trackId;
-    private String diagnostic;
+public class OrderEvent extends AbstractEvent<OrderEventType>{
 
-    public OrderEvent(OrderEventType eventType) {
-        super(eventType);
-    }
-    public OrderEvent(OrderEventType eventType,String trackId,String diagnostic) {
-        super(eventType);
-        this.trackId = trackId;
-        this.diagnostic = diagnostic;
+    private final ApplicationId appId;
+    private final String diagnosticMsg;
+
+    public OrderEvent(ApplicationId appId, OrderEventType type) {
+        this(appId, type, "");
     }
 
-    public OrderEvent(OrderEventType eventType,String trackId) {
-        super(eventType);
-        this.trackId = trackId;
-        this.diagnostic = "";
+    public OrderEvent(ApplicationId appId, OrderEventType type,
+                      String diagnostic) {
+        super(type);
+        this.appId = appId;
+        this.diagnosticMsg = diagnostic;
     }
 
-
-    public String getTrackId() {
-        return trackId;
+    public OrderEvent(ApplicationId appId, OrderEventType type, long timeStamp) {
+        super(type, timeStamp);
+        this.appId = appId;
+        this.diagnosticMsg = "";
     }
 
-    public void setTrackId(String trackId) {
-        this.trackId = trackId;
+    public ApplicationId getApplicationId() {
+        return this.appId;
     }
 
-    public String getDiagnostic() {
-        return diagnostic;
+    public String getDiagnosticMsg() {
+        return this.diagnosticMsg;
     }
 
-    public void setDiagnostic(String diagnostic) {
-        this.diagnostic = diagnostic;
-    }
 }
