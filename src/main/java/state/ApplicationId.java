@@ -1,5 +1,6 @@
 package state;
 
+import bean.Records;
 import utils.FastNumberFormat;
 
 public abstract class ApplicationId implements Comparable<ApplicationId> {
