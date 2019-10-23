@@ -29,7 +29,6 @@ public class RecordFactoryPBImpl implements RecordFactory {
 
         Constructor<?> constructor = cache.get(clazz);
         if (constructor == null) {
-
             try {
                 Class<?> pbClazz = Class.forName("bean.RecordFactoryPBImpl");
                 constructor = pbClazz.getConstructor();
