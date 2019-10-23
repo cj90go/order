@@ -7,16 +7,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class RecordFactoryPBImpl implements RecordFactory {
+public class RecordFactoryDfltImpl implements RecordFactory {
 
 
-    private static final String PB_IMPL_PACKAGE_SUFFIX = "impl.pb";
-    private static final String PB_IMPL_CLASS_SUFFIX = "PBImpl";
+    private static final String DEFAULT_IMPL_PACKAGE_SUFFIX = "impl.dflt";
+    private static final String DEFAULT_IMPL_CLASS_SUFFIX = "DfltImpl";
 
-    private static final RecordFactoryPBImpl self = new RecordFactoryPBImpl();
+    private static final RecordFactoryDfltImpl self = new RecordFactoryDfltImpl();
     private ConcurrentMap<Class<?>, Constructor<?>> cache = new ConcurrentHashMap<Class<?>, Constructor<?>>();
 
-    private RecordFactoryPBImpl() {
+    private RecordFactoryDfltImpl() {
     }
 
     public static RecordFactory get() {
@@ -30,7 +30,7 @@ public class RecordFactoryPBImpl implements RecordFactory {
         Constructor<?> constructor = cache.get(clazz);
         if (constructor == null) {
             try {
-                Class<?> pbClazz = Class.forName("bean.RecordFactoryPBImpl");
+                Class<?> pbClazz = Class.forName(getPBImplClassName(clazz));
                 constructor = pbClazz.getConstructor();
                 constructor.setAccessible(true);
                 cache.putIfAbsent(clazz, constructor);
@@ -53,9 +53,13 @@ public class RecordFactoryPBImpl implements RecordFactory {
     private String getPBImplClassName(Class<?> clazz) {
         String srcPackagePart = getPackageName(clazz);
         String srcClassName = getClassName(clazz);
-        String destPackagePart = srcPackagePart + "." + PB_IMPL_PACKAGE_SUFFIX;
-        String destClassPart = srcClassName + PB_IMPL_CLASS_SUFFIX;
+        String destPackagePart = srcPackagePart + "." + DEFAULT_IMPL_PACKAGE_SUFFIX;
+        String destClassPart = srcClassName + DEFAULT_IMPL_CLASS_SUFFIX;
         return destPackagePart + "." + destClassPart;
+    }
+
+    public static void main(String[] args) {
+
     }
 
     private String getClassName(Class<?> clazz) {

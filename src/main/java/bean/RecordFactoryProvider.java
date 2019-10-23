@@ -21,8 +21,11 @@ public class RecordFactoryProvider {
     }
 
     public static RecordFactory getRecordFactory(Configuration conf) {
+        if(conf == null){
+            conf =defaultConf;
+        }
 
-        return (RecordFactory) getFactoryClassInstance("bean.RecordFactoryPBImpl");
+        return (RecordFactory) getFactoryClassInstance(conf.get(OrderConfiguration.DEFT_RECORD_FACTORY_CLASS,OrderConfiguration.DEFT_RECORD_FACTORY_CLASS));
     }
 
     private static Object getFactoryClassInstance(String factoryClassName) {

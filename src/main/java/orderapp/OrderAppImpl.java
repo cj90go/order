@@ -24,8 +24,12 @@ public class OrderAppImpl implements OrderApp {
         this.writeLock = lock.writeLock();
     }
 
-    private static final StateMachineFactory<OrderAppImpl, OrderState, OrderEventType, OrderEvent> stateMachineFactory = new StateMachineFactory<OrderAppImpl, OrderState, OrderEventType, OrderEvent>(
-            OrderState.INIT).addTransition(OrderState.CREATE, OrderState.SCHOOLING, OrderEventType.PAY,new OrderCreate());
+    /**
+     * 定义状态内部流转
+     */
+    private static final StateMachineFactory<OrderAppImpl, OrderState, OrderEventType, OrderEvent> stateMachineFactory =
+        new StateMachineFactory<OrderAppImpl, OrderState, OrderEventType, OrderEvent>(OrderState.INIT)
+            .addTransition(OrderState.INIT, OrderState.ALLOCATING, OrderEventType.PAY, new OrderCreate());
 
     public static void main(String[] args) {
         System.out.println(OrderState.ALLOCATING.getStatus());
@@ -33,8 +37,7 @@ public class OrderAppImpl implements OrderApp {
         ApplicationId applicationId = ApplicationId.newInstance(System.currentTimeMillis(), 1);
         OrderApp app = new OrderAppImpl();
 
-        OrderEvent createEvent = new OrderEvent(applicationId,
-               OrderEventType.PAY, "");
+        OrderEvent createEvent = new OrderEvent(applicationId, OrderEventType.PAY, "");
         app.handle(createEvent);
     }
 
@@ -48,8 +51,7 @@ public class OrderAppImpl implements OrderApp {
             try {
                 this.stateMachine.doTransition(event.getType(), event);
             } catch (InvalidStateTransitionException e) {
-                LOG.error("App: " + appID + " can't handle this event at current state value={}", oldState.getStatus(),
-                    e);
+                LOG.error("App: " + appID + " can't handle this event at current state value={}", oldState.name(), e);
                 onInvalidStateTransition(event, oldState);
             }
             // 记录状态转换日志
@@ -65,14 +67,14 @@ public class OrderAppImpl implements OrderApp {
 
     }
 
-    private final static class OrderCreate extends OrderTransaction{
+    private final static class OrderCreate extends OrderTransaction {
         @Override
         public void transition(OrderAppImpl orderApp, OrderEvent event) {
             System.out.println("OrderCreate transaction...");
         }
     }
 
-    private static class OrderTransaction implements SingleArcTransition<OrderAppImpl,OrderEvent> {
+    private static class OrderTransaction implements SingleArcTransition<OrderAppImpl, OrderEvent> {
         @Override
         public void transition(OrderAppImpl orderApp, OrderEvent event) {
 
